@@ -2,8 +2,8 @@ extends CharacterBody2D
 
 @onready var sprite = $Sprite2D
 
-const SPEED =  100.0
-const ACCEL = 5
+const SPEED =  45.0
+const ACCEL = 10
 
 var input: Vector2
 
