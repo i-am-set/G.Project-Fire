@@ -3,7 +3,7 @@ extends Control
 var is_open = false
 
 func _ready():
-	close()
+	open()
 
 func _process(delta):
 	if Input.is_action_just_pressed("inventory"):
@@ -13,9 +13,7 @@ func _process(delta):
 			open()
 
 func open():
-	self.visible = true
-	is_open = true
+	print("open")
 
 func close():
-	self.visible = false
-	is_open = false
+	print("open")

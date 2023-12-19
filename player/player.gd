@@ -26,7 +26,7 @@ func _process(delta):
 		if velocity.x < velocity.y:
 			sprite.frame = 0
 		elif velocity.y < velocity.x:
-			sprite.frame = 1
+			sprite.frame = 2
 	
 	if velocity.x > 0:
 		sprite.flip_h = true

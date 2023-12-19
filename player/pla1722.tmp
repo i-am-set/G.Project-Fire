@@ -1,0 +1,201 @@
+[gd_scene load_steps=21 format=3 uid="uid://bi4ncv3exokwp"]
+
+[ext_resource type="Script" path="res://player/player.gd" id="1_x3rg3"]
+[ext_resource type="Texture2D" uid="uid://5m7a5h7rqpb5" path="res://player/player_sprite-sheet.png" id="2_0ascb"]
+[ext_resource type="Script" path="res://player/s_inventory_ui.gd" id="3_4ogj5"]
+[ext_resource type="FontFile" uid="uid://c7v06xlyp2cvh" path="res://fonts/04B_03__/04B_03__.TTF" id="3_5hhaq"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_stacked.gd" id="4_1fi3e"]
+[ext_resource type="Resource" uid="uid://ce4mhybtf2huv" path="res://items/ItemProtoset.tres" id="5_sipck"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="6_0klem"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_stacked.gd" id="6_bwvs3"]
+[ext_resource type="PackedScene" uid="uid://dkuecgnune8ag" path="res://ui/inventory_item_button.tscn" id="8_f4876"]
+
+[sub_resource type="FontVariation" id="FontVariation_5ghh2"]
+base_font = ExtResource("3_5hhaq")
+spacing_glyph = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qwot4"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vddfq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xb1o0"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.07)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2iyxf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lov6c"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lsxrc"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_abvsh"]
+bg_color = Color(0.431373, 0.494118, 0.552941, 0.662745)
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2lcl1"]
+bg_color = Color(0.823529, 0.890196, 0.921569, 1)
+
+[sub_resource type="Theme" id="Theme_2l2v5"]
+default_font_size = 8
+ItemList/colors/font_color = Color(0.823529, 0.890196, 0.921569, 1)
+ItemList/colors/font_hovered_color = Color(0.960784, 0.937255, 0.909804, 1)
+ItemList/colors/font_outline_color = Color(0.960784, 0.937255, 0.909804, 1)
+ItemList/colors/font_selected_color = Color(0.960784, 0.937255, 0.909804, 1)
+ItemList/colors/guide_color = Color(0.996078, 0.572549, 0.388235, 0)
+ItemList/constants/h_separation = 4
+ItemList/constants/icon_margin = 4
+ItemList/constants/line_separation = 2
+ItemList/constants/outline_size = 0
+ItemList/constants/v_separation = 2
+ItemList/font_sizes/font_size = 16
+ItemList/fonts/font = SubResource("FontVariation_5ghh2")
+ItemList/styles/cursor = SubResource("StyleBoxFlat_qwot4")
+ItemList/styles/cursor_unfocused = SubResource("StyleBoxFlat_qwot4")
+ItemList/styles/focus = SubResource("StyleBoxEmpty_vddfq")
+ItemList/styles/hovered = SubResource("StyleBoxFlat_xb1o0")
+ItemList/styles/panel = SubResource("StyleBoxEmpty_2iyxf")
+ItemList/styles/selected = SubResource("StyleBoxFlat_lov6c")
+ItemList/styles/selected_focus = SubResource("StyleBoxFlat_lsxrc")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_abvsh")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_2lcl1")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h1135"]
+size = Vector2(6, 23)
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+texture_filter = 1
+script = ExtResource("1_x3rg3")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Inventory UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_2l2v5")
+script = ExtResource("3_4ogj5")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Inventory UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 464.0
+offset_top = 205.0
+offset_right = -464.0
+offset_bottom = -205.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.219608, 0.254902, 0.313726, 0.6)
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer/Inventory UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 464.0
+offset_top = 676.0
+offset_right = -972.0
+offset_bottom = -205.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.431373, 0.494118, 0.552941, 0.662745)
+
+[node name="InventoryStacked" type="Node" parent="CanvasLayer/Inventory UI"]
+script = ExtResource("4_1fi3e")
+capacity = 25.0
+item_protoset = ExtResource("5_sipck")
+
+[node name="_Node_22793" type="Node" parent="CanvasLayer/Inventory UI/InventoryStacked"]
+script = ExtResource("6_0klem")
+protoset = ExtResource("5_sipck")
+prototype_id = "wooden_stick"
+
+[node name="_Node_22812" type="Node" parent="CanvasLayer/Inventory UI/InventoryStacked"]
+script = ExtResource("6_0klem")
+protoset = ExtResource("5_sipck")
+prototype_id = "wooden_stick"
+
+[node name="_Node_22831" type="Node" parent="CanvasLayer/Inventory UI/InventoryStacked"]
+script = ExtResource("6_0klem")
+protoset = ExtResource("5_sipck")
+prototype_id = "stone"
+
+[node name="CtrlInventoryStacked" type="Control" parent="CanvasLayer/Inventory UI"]
+anchors_preset = 0
+offset_left = 478.0
+offset_top = 221.0
+offset_right = 920.0
+offset_bottom = 667.0
+script = ExtResource("6_bwvs3")
+label_visible = false
+inventory_path = NodePath("../InventoryStacked")
+
+[node name="InventoryItemButton" parent="CanvasLayer/Inventory UI" instance=ExtResource("8_f4876")]
+layout_mode = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_0ascb")
+hframes = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1.5)
+shape = SubResource("RectangleShape2D_h1135")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+position_smoothing_enabled = true
