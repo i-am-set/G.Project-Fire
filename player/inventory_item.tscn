@@ -1,31 +1,61 @@
-[gd_scene load_steps=7 format=3 uid="uid://b7ufhdruknu5p"]
+[gd_scene load_steps=15 format=3 uid="uid://b7ufhdruknu5p"]
 
+[ext_resource type="FontFile" uid="uid://cedsj1jra6naq" path="res://fonts/Open Sans/static/OpenSans-Bold.ttf" id="1_2bn2f"]
 [ext_resource type="Script" path="res://player/inventory_item_button.gd" id="2_dnoo0"]
 [ext_resource type="Texture2D" uid="uid://br7hhqhn0ookr" path="res://items/item sprites/item_sprite_wooden_stick.png" id="2_jbo4q"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m134h"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qbjfk"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4muxu"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7jxo5"]
+border_color = Color(0.6, 0.6, 0.6, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_y3y2i"]
+base_font = ExtResource("1_2bn2f")
+spacing_glyph = 2
+
 [sub_resource type="Theme" id="Theme_ox2kf"]
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(1, 1, 1, 0)
+Button/colors/font_focus_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_outline_color = Color(0.0901961, 0.0666667, 0.101961, 1)
 Button/styles/focus = SubResource("StyleBoxEmpty_m134h")
+Button/styles/hover = SubResource("StyleBoxFlat_qbjfk")
 Button/styles/normal = SubResource("StyleBoxEmpty_4muxu")
+Button/styles/pressed = SubResource("StyleBoxFlat_7jxo5")
+Label/colors/font_color = Color(1, 1, 1, 1)
 Label/colors/font_outline_color = Color(0.0901961, 0.0666667, 0.101961, 1)
 Label/constants/outline_size = 6
+Label/fonts/font = SubResource("FontVariation_y3y2i")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o73io"]
 bg_color = Color(0.0901961, 0.0666667, 0.101961, 1)
 
-[node name="Inventory Item" type="Button" node_paths=PackedStringArray("ground_amount_label", "main_amount_label")]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_avr6n"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dp1jp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4301n"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mna70"]
+
+[node name="Inventory Item" type="Button" node_paths=PackedStringArray("ground_amount_label", "main_amount_label", "left_button", "right_button")]
 offset_right = 358.0
 offset_bottom = 24.0
 theme = SubResource("Theme_ox2kf")
 toggle_mode = true
 action_mode = 0
-text = "."
+keep_pressed_outside = true
+text = " "
 script = ExtResource("2_dnoo0")
 ground_amount_label = NodePath("Ground Quantity")
 main_amount_label = NodePath("Main Quantity")
+left_button = NodePath("LeftButton")
+right_button = NodePath("RightButton")
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 1
@@ -70,6 +100,11 @@ offset_bottom = 12.0
 grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/normal = SubResource("StyleBoxFlat_o73io")
+theme_override_styles/hover = SubResource("StyleBoxFlat_o73io")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_o73io")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_avr6n")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_dp1jp")
+disabled = true
 text = "<"
 
 [node name="RightButton" type="Button" parent="."]
@@ -86,9 +121,15 @@ grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/normal = SubResource("StyleBoxFlat_o73io")
+theme_override_styles/hover = SubResource("StyleBoxFlat_o73io")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_o73io")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_4301n")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mna70")
+disabled = true
 text = ">"
 
 [node name="Ground Quantity" type="Label" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -98,25 +139,26 @@ offset_top = -12.0
 offset_right = 57.0
 offset_bottom = 12.0
 grow_vertical = 2
-horizontal_alignment = 1
-text_overrun_behavior = 1
+text = "
+"
 
 [node name="Main Quantity" type="Label" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -55.0
+offset_left = -62.0
 offset_top = -12.0
-offset_right = -31.0
+offset_right = -38.0
 offset_bottom = 12.0
 grow_horizontal = 0
 grow_vertical = 2
-text = "1"
-horizontal_alignment = 1
-text_overrun_behavior = 1
+horizontal_alignment = 2
 
 [connection signal="pressed" from="." to="." method="_on_pressed"]
+[connection signal="toggled" from="." to="." method="_on_toggled"]
 [connection signal="pressed" from="LeftButton" to="." method="_on_left_button_pressed"]
+[connection signal="pressed" from="RightButton" to="." method="_on_right_button_pressed"]

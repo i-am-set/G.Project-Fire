@@ -4,20 +4,15 @@
 [ext_resource type="Texture2D" uid="uid://br7hhqhn0ookr" path="res://items/item sprites/item_sprite_wooden_stick.png" id="2_nxj7g"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ex350"]
-radius = 30.0
+radius = 13.1529
 
-[node name="Ground Item" type="Node2D"]
+[node name="Ground Item" type="Area2D"]
+collision_layer = 4
+collision_mask = 0
 script = ExtResource("1_dino3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_nxj7g")
 
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_ex350")
-
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
-[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

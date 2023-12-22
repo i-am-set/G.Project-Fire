@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bi4ncv3exokwp"]
+[gd_scene load_steps=16 format=3 uid="uid://bi4ncv3exokwp"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_x3rg3"]
 [ext_resource type="Texture2D" uid="uid://5m7a5h7rqpb5" path="res://player/player_sprite-sheet.png" id="2_0ascb"]
@@ -35,20 +35,6 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.75
 shader_parameter/vignette_opacity = 0.5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fuuk"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3x8ck"]
-bg_color = Color(0, 0, 0, 1)
-
-[sub_resource type="Theme" id="Theme_xf80x"]
-ProgressBar/styles/background = SubResource("StyleBoxFlat_6fuuk")
-ProgressBar/styles/fill = SubResource("StyleBoxFlat_3x8ck")
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06t3l"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4j67y"]
-bg_color = Color(0, 0.647059, 0.905882, 1)
-
 [sub_resource type="FontVariation" id="FontVariation_2fi48"]
 base_font = ExtResource("2_na0qm")
 spacing_glyph = 1
@@ -62,17 +48,25 @@ size = Vector2(6, 6)
 [sub_resource type="CircleShape2D" id="CircleShape2D_0iq2r"]
 radius = 23.0
 
-[node name="CharacterBody2D" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "inventory_list")]
+[node name="CharacterBody2D" type="CharacterBody2D"]
 texture_filter = 1
 collision_layer = 2
 script = ExtResource("1_x3rg3")
-sprite = NodePath("Sprite2D")
-inventory_list = NodePath("CanvasLayer/InventoryUI/InventoryList")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Shader" type="Control" parent="CanvasLayer"]
+[node name="UserInterface" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("inventory_list")]
 layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_4ogj5")
+inventory_list = NodePath("InventoryList")
+
+[node name="Shader" type="Control" parent="CanvasLayer/UserInterface"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -80,7 +74,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Shader ColorRect" type="ColorRect" parent="CanvasLayer/Shader"]
+[node name="Shader ColorRect" type="ColorRect" parent="CanvasLayer/UserInterface/Shader"]
 texture_filter = 1
 material = SubResource("ShaderMaterial_e4n5o")
 layout_mode = 1
@@ -91,143 +85,97 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="InventoryUI" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("inventory_list", "capacity_progress_bar")]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = SubResource("Theme_xf80x")
-script = ExtResource("3_4ogj5")
-inventory_list = NodePath("InventoryList")
-capacity_progress_bar = NodePath("CapacityProgressBar")
-
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/InventoryUI"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 597.0
-offset_top = 272.0
-offset_right = -597.0
-offset_bottom = -272.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Main Inventory" type="Node" parent="CanvasLayer/InventoryUI"]
+[node name="Main Inventory" type="Node" parent="CanvasLayer/UserInterface"]
 script = ExtResource("4_1fi3e")
-capacity = 22.0
+capacity = 100.0
 item_protoset = ExtResource("5_sipck")
 
-[node name="_Node_29621" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_29621" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wood_log"
 
-[node name="_Node_378072" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378072" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "small_stone"
 
-[node name="_Node_378091" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378091" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wood_log"
 
-[node name="_Node_378110" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378110" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "small_stone"
 
-[node name="_Node_378129" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378129" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wooden_stick"
 
-[node name="_Node_378148" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378148" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wooden_stick"
 
-[node name="_Node_378167" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378167" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "small_stone"
 
-[node name="_Node_378186" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378186" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wood_log"
 
-[node name="_Node_378205" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378205" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wooden_stick"
 
-[node name="_Node_378224" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378224" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wood_log"
 
-[node name="_Node_378243" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378243" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "small_stone"
 
-[node name="_Node_378262" type="Node" parent="CanvasLayer/InventoryUI/Main Inventory"]
+[node name="_Node_378262" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wood_log"
 
-[node name="CapacityProgressBar" type="ProgressBar" parent="CanvasLayer/InventoryUI"]
-z_index = 1
-layout_mode = 2
-offset_left = 597.0
-offset_top = 804.0
-offset_right = 912.0
-offset_bottom = 808.0
-size_flags_horizontal = 3
-theme_override_styles/background = SubResource("StyleBoxEmpty_06t3l")
-value = 15.5
-rounded = true
-show_percentage = false
+[node name="Ground Inventory" type="Node" parent="CanvasLayer/UserInterface"]
+script = ExtResource("4_1fi3e")
+capacity = 99999.0
+item_protoset = ExtResource("5_sipck")
 
-[node name="PossibleCapacityProgressBar" type="ProgressBar" parent="CanvasLayer/InventoryUI/CapacityProgressBar"]
-z_as_relative = false
-layout_mode = 2
-offset_right = 315.0
-offset_bottom = 4.0
-size_flags_horizontal = 3
-theme_override_styles/fill = SubResource("StyleBoxFlat_4j67y")
-value = 21.31
-rounded = true
-show_percentage = false
-
-[node name="InventoryList" type="ScrollContainer" parent="CanvasLayer/InventoryUI" node_paths=PackedStringArray("_capacity_progress_bar", "_possible_capacity_progress_bar", "_vbox_container", "_pickup_area")]
+[node name="InventoryList" type="ScrollContainer" parent="CanvasLayer/UserInterface" node_paths=PackedStringArray("_vbox_container", "_pickup_area")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 597.0
-offset_top = 272.0
-offset_right = -1008.0
-offset_bottom = -276.0
+offset_left = 299.0
+offset_top = 167.0
+offset_right = -1147.0
+offset_bottom = -675.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_d5rai")
 horizontal_scroll_mode = 0
 script = ExtResource("7_c5juy")
 inventory_path = NodePath("../Main Inventory")
-_capacity_progress_bar = NodePath("../CapacityProgressBar")
-_possible_capacity_progress_bar = NodePath("../CapacityProgressBar/PossibleCapacityProgressBar")
 _vbox_container = NodePath("VBoxContainer")
 _pickup_area = NodePath("../../../PickupArea")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InventoryUI/InventoryList"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UserInterface/InventoryList"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 0
 alignment = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

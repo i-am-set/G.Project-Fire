@@ -146,6 +146,9 @@ func has_item(item: InventoryItem) -> bool:
 
 
 func add_item(item: InventoryItem) -> bool:
+	if has_item(item):
+		return false
+	
 	if !can_add_item(item):
 		return false
 
@@ -159,7 +162,7 @@ func add_item(item: InventoryItem) -> bool:
 
 
 func can_add_item(item: InventoryItem) -> bool:
-	if item == null || has_item(item):
+	if item == null:
 		return false
 		
 	if !can_hold_item(item):
@@ -242,9 +245,9 @@ func reset() -> void:
 
 
 func clear() -> void:
+	remove_all_items()
 	for item in get_items():
 		item.queue_free()
-	remove_all_items()
 
 
 func serialize() -> Dictionary:

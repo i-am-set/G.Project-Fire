@@ -35,6 +35,5 @@ script = ExtResource("2_37qw3")
 player = NodePath("../Entities/CharacterBody2D")
 
 [node name="Entities" type="Node2D" parent="."]
-y_sort_enabled = true
 
 [node name="CharacterBody2D" parent="Entities" instance=ExtResource("3_l1bhc")]
