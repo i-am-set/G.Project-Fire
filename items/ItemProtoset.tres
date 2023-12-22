@@ -7,23 +7,26 @@ script = ExtResource("1_pmbw7")
 json_data = "[
     {
         \"id\": \"wooden_stick\",
+        \"name\": \"Wooden Stick\",
+		\"image\": \"res://items/item sprites/item_sprite_wooden_stick.png\",
 		\"max_stack_size\": \"99\",
 		\"weight\": \"1.0\",
-        \"name\": \"Wooden Stick\",
         \"description\": \"A wooden stick from a tree.\"
     },
     {
-        \"id\": \"stone\",
+        \"id\": \"small_stone\",
+        \"name\": \"Small Stone\",
+		\"image\": \"res://items/item sprites/item_sprite_small_stone.png\",
 		\"max_stack_size\": \"99\",
 		\"weight\": \"2.0\",
-        \"name\": \"Stone\",
-        \"description\": \"A mundane stone the size of a fist.\"
+        \"description\": \"A mundane stone.\"
     },
     {
         \"id\": \"wood_log\",
+        \"name\": \"Wood Log\",
+		\"image\": \"res://items/item sprites/item_sprite_wooden_log.png\",
 		\"max_stack_size\": \"99\",
 		\"weight\": \"2.0\",
-        \"name\": \"Wood Log\",
-        \"description\": \"A partition of a wood log.\"
+        \"description\": \"A wood log.\"
     }
 ]"

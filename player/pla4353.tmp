@@ -42,16 +42,15 @@ spacing_glyph = 1
 default_font = SubResource("FontVariation_2fi48")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h1135"]
-size = Vector2(6, 6)
+size = Vector2(6, 23)
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 texture_filter = 1
-collision_layer = 2
 script = ExtResource("1_x3rg3")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UserInterface" type="Control" parent="CanvasLayer"]
+[node name="User Interface" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -60,7 +59,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_4ogj5")
 
-[node name="Shader" type="Control" parent="CanvasLayer/UserInterface"]
+[node name="Shader" type="Control" parent="CanvasLayer/User Interface"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,7 +68,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Shader ColorRect" type="ColorRect" parent="CanvasLayer/UserInterface/Shader"]
+[node name="Shader ColorRect" type="ColorRect" parent="CanvasLayer/User Interface/Shader"]
 texture_filter = 1
 material = SubResource("ShaderMaterial_e4n5o")
 layout_mode = 1
@@ -80,77 +79,32 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Main Inventory" type="Node" parent="CanvasLayer/UserInterface"]
+[node name="InventoryStacked" type="Node" parent="CanvasLayer/User Interface"]
 script = ExtResource("4_1fi3e")
-capacity = 100.0
+capacity = 20.0
 item_protoset = ExtResource("5_sipck")
 
-[node name="_Node_29621" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
-script = ExtResource("6_0klem")
-protoset = ExtResource("5_sipck")
-prototype_id = "wood_log"
-
-[node name="_Node_378072" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
-script = ExtResource("6_0klem")
-protoset = ExtResource("5_sipck")
-prototype_id = "small_stone"
-
-[node name="_Node_378091" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
-script = ExtResource("6_0klem")
-protoset = ExtResource("5_sipck")
-prototype_id = "wood_log"
-
-[node name="_Node_378110" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
-script = ExtResource("6_0klem")
-protoset = ExtResource("5_sipck")
-prototype_id = "small_stone"
-
-[node name="_Node_378129" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
+[node name="_Node_28942" type="Node" parent="CanvasLayer/User Interface/InventoryStacked"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wooden_stick"
 
-[node name="_Node_378148" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
+[node name="_Node_28961" type="Node" parent="CanvasLayer/User Interface/InventoryStacked"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "wooden_stick"
 
-[node name="_Node_378167" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
+[node name="_Node_28980" type="Node" parent="CanvasLayer/User Interface/InventoryStacked"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "small_stone"
 
-[node name="_Node_378186" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
-script = ExtResource("6_0klem")
-protoset = ExtResource("5_sipck")
-prototype_id = "wood_log"
-
-[node name="_Node_378205" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
-script = ExtResource("6_0klem")
-protoset = ExtResource("5_sipck")
-prototype_id = "wooden_stick"
-
-[node name="_Node_378224" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
-script = ExtResource("6_0klem")
-protoset = ExtResource("5_sipck")
-prototype_id = "wood_log"
-
-[node name="_Node_378243" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
+[node name="_Node_28999" type="Node" parent="CanvasLayer/User Interface/InventoryStacked"]
 script = ExtResource("6_0klem")
 protoset = ExtResource("5_sipck")
 prototype_id = "small_stone"
 
-[node name="_Node_378262" type="Node" parent="CanvasLayer/UserInterface/Main Inventory"]
-script = ExtResource("6_0klem")
-protoset = ExtResource("5_sipck")
-prototype_id = "wood_log"
-
-[node name="Ground Inventory" type="Node" parent="CanvasLayer/UserInterface"]
-script = ExtResource("4_1fi3e")
-capacity = 99999.0
-item_protoset = ExtResource("5_sipck")
-
-[node name="InventoryList" type="ScrollContainer" parent="CanvasLayer/UserInterface" node_paths=PackedStringArray("_vbox_container")]
+[node name="Inventory List" type="ScrollContainer" parent="CanvasLayer/User Interface" node_paths=PackedStringArray("_vbox_container")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -164,11 +118,10 @@ grow_vertical = 2
 theme = SubResource("Theme_d5rai")
 horizontal_scroll_mode = 0
 script = ExtResource("7_c5juy")
-inventory_path = NodePath("../Main Inventory")
-ground_inventory_path = NodePath("../Ground Inventory")
+inventory_path = NodePath("../InventoryStacked")
 _vbox_container = NodePath("VBoxContainer")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UserInterface/InventoryList"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/User Interface/Inventory List"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
@@ -179,7 +132,7 @@ texture = ExtResource("2_0ascb")
 hframes = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 10)
+position = Vector2(0, 1.5)
 shape = SubResource("RectangleShape2D_h1135")
 
 [node name="Camera2D" type="Camera2D" parent="."]

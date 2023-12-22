@@ -1,26 +1,41 @@
 extends Button
 
 @export var ground_amount_label: Label
-@export var inventory_amount_label: Label
+@export var main_amount_label: Label
+
+@onready var inventoryList: Node = get_parent().get_parent()
 
 # Use a unique name for your custom signal
-signal inventory_item_button_pressed(item_count)
+signal inventory_item_button_pressed(item_type)
 
-var item_amount: int = 1
-var item_position: int
+var main_item_amount: int
+var ground_item_amount: int
+
+var item_id: String
 var item_type: InventoryItem
 
 func _process(delta):
-	if item_amount > 0:
-		inventory_amount_label.text = str(item_amount)
-		inventory_amount_label.visible = true
+	if main_item_amount > 0:
+		main_amount_label.text = str(main_item_amount)
+		main_amount_label.visible = true
+	else:
+		main_amount_label.visible = false
+	
+	if ground_item_amount > 0:
+		ground_amount_label.text = str(ground_item_amount)
+		ground_amount_label.visible = true
+	else:
+		ground_amount_label.visible = false
 
-func set_meta_data(_item_title: String, _item_texture: Texture2D, _item_position: int, _item_type: InventoryItem):
-	text = _item_title
-	icon = _item_texture
-	item_position = _item_position
+func set_meta_data(_item_title: String, _item_texture: Texture2D, _item_id: String, _item_type: InventoryItem):
+	$Title.text = _item_title
+	$Texture.texture = _item_texture
+	item_id = _item_id
 	item_type = _item_type
 
 func _on_pressed():
 	# Emit the custom signal with the custom data when the button is pressed
-	emit_signal("custom_button_pressed", item_type)
+	emit_signal("inventory_item_button_pressed", item_type)
+
+func _on_left_button_pressed():
+	inventoryList.drop_item(item_id)
