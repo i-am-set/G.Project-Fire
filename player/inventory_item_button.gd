@@ -6,10 +6,11 @@ extends Button
 @export var left_button: Button
 @export var right_button: Button
 
+@export var popup_menu: PopupMenu
+
 @onready var inventoryList: Node = get_parent().get_parent()
 
-# Use a unique name for your custom signal
-signal inventory_item_button_pressed(item_type)
+var wiped: bool = false
 
 var main_item_amount: int
 var ground_item_amount: int
@@ -17,7 +18,27 @@ var ground_item_amount: int
 var item_id: String
 var item: InventoryItem
 
-func _process(delta):
+
+func _connect_item_slot_signals() -> void:
+	if !inventoryList:
+		return
+
+	if !inventoryList.refreshed.is_connected(_refresh):
+		inventoryList.refreshed.connect(_refresh)
+
+func _disconnect_item_slot_signals() -> void:
+	if !inventoryList:
+		return
+
+	if inventoryList.refreshed.is_connected(_refresh):
+		inventoryList.refreshed.disconnect(_refresh)
+
+
+func _ready():
+	_disconnect_item_slot_signals()
+	_connect_item_slot_signals()
+
+func _refresh():
 	if main_item_amount > 0:
 		main_amount_label.text = str(main_item_amount)
 		main_amount_label.visible = true
@@ -39,10 +60,9 @@ func set_meta_data(_item_title: String, _item_texture: Texture2D, _item_id: Stri
 	$Texture.texture = _item_texture
 	item_id = _item_id
 	item = _item
+	wiped = false
 
 func _on_pressed():
-	# Emit the custom signal with the custom data when the button is pressed
-	emit_signal("inventory_item_button_pressed", item)
 	if inventoryList != null:
 			inventoryList._update_capacity_progress_bar()
 
@@ -61,3 +81,19 @@ func _on_toggled(toggled_on):
 	else:
 		left_button.disabled = true
 		right_button.disabled = true
+
+func _wipe():
+	main_item_amount = 0
+	ground_item_amount = 0
+	item_id = "null"
+	item = null
+	wiped = true
+
+func _is_wiped() -> bool:
+	return wiped
+
+func _on_gui_input(event):
+	if event is InputEventMouseButton and event.pressed:
+		match event.button_index:
+			MOUSE_BUTTON_RIGHT:
+				inventoryList._popup_context_menu(self, item, item_id, ground_item_amount, main_item_amount)

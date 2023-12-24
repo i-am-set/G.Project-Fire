@@ -26,3 +26,4 @@ func close():
 	visible = false
 	inventory_list.is_open = false
 	inventory_list.selected_inventory_item_id = ""
+	inventory_list._hide_context_menu()

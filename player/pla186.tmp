@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bi4ncv3exokwp"]
+[gd_scene load_steps=29 format=3 uid="uid://bi4ncv3exokwp"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_x3rg3"]
 [ext_resource type="Texture2D" uid="uid://5m7a5h7rqpb5" path="res://player/player_sprite-sheet.png" id="2_0ascb"]
@@ -67,18 +67,13 @@ spacing_glyph = 2
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ldb6t"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vrd3a"]
-bg_color = Color(0.231373, 0.231373, 0.231373, 0.454902)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ch0r"]
-bg_color = Color(0.164706, 0.164706, 0.164706, 0.792157)
 anti_aliasing = false
 
 [sub_resource type="Theme" id="Theme_2dhjr"]
 Button/font_sizes/font_size = 11
 Button/fonts/font = SubResource("FontVariation_yk2tl")
 Button/styles/focus = SubResource("StyleBoxEmpty_ldb6t")
-Button/styles/hover = SubResource("StyleBoxFlat_vrd3a")
 Button/styles/normal = SubResource("StyleBoxFlat_3ch0r")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h1135"]

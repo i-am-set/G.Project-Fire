@@ -1,6 +1,7 @@
 extends ScrollContainer
 
 signal inventory_item_activated(item)
+signal refreshed
 
 @export var inventory_path: NodePath :
 	get:
@@ -40,11 +41,14 @@ var _inventory_item_button_scene = preload("res://player/inventory_item.tscn")
 var _inventory_item_button_group = preload("res://player/inventory_item_button_group.tres")
 var _ground_item = preload("res://items/ground_item.tscn")
 
-@export var _capacity_progress_bar : ProgressBar
-@export var _possible_capacity_progress_bar : ProgressBar
+@export var _capacity_progress_bar: ProgressBar
+@export var _possible_capacity_progress_bar: ProgressBar
 @export var _vbox_container: VBoxContainer
-@export var _pickup_area : Area2D
+@export var _pickup_area: Area2D
+@export var _hand_slot: PanelContainer
+@export var _context_menu: Panel
 
+var is_refreshing : bool = false
 var is_open : bool = false
 var current_frame : int = 0
 var selected_inventory_item_id: String = ""
@@ -94,18 +98,31 @@ func _disconnect_inventory_signals() -> void:
 		inventory.item_modified.disconnect(_on_item_modified)
 
 
+
 func _refresh() -> void:
+	if is_refreshing:
+		return
+	
+	is_refreshing = true
 	await get_tree().create_timer(0.01).timeout
+	is_refreshing = false
 	
 	if is_inside_tree():
-		_clear_list()
+		_wipe_list()
 		_populate_list()
+		_clear_list()
 		_update_capacity_progress_bar()
+		refreshed.emit()
+
+func _wipe_list() -> void:
+	for child in _vbox_container.get_children():
+		child._wipe()
 
 func _clear_list() -> void:
 	for child in _vbox_container.get_children():
-		_vbox_container.remove_child(child)
-		child.queue_free()
+		if child._is_wiped() == true:
+			_vbox_container.remove_child(child)
+			child.queue_free()
 
 func _populate_list() -> void:
 	if inventory == null:
@@ -139,18 +156,14 @@ func _populate_list() -> void:
 			texture = default_item_icon
 			
 		if _vbox_container.get_child_count() <= 0:
-			_create_item_button(_get_item_title(item), texture, item.prototype_id, item)
-			if _givenInventory == inventory:
-				_vbox_container.get_child(0).main_item_amount += 1
-			else:
-				_vbox_container.get_child(0).ground_item_amount += 1
+			_create_item_button(_get_item_title(item), texture, item.prototype_id, item, _givenInventory)
 		else:
-			var tempItemList = []
+			var tempItemIdList = []
 			
 			for current_item in _vbox_container.get_children():
-				tempItemList.append(current_item.item_id)
+				tempItemIdList.append(current_item.item_id)
 			
-			if item.prototype_id in tempItemList:
+			if item.prototype_id in tempItemIdList:
 				for current_item in _vbox_container.get_children():
 					if current_item.item_id == item.prototype_id:
 						if _givenInventory == inventory:
@@ -158,13 +171,19 @@ func _populate_list() -> void:
 						else:
 							current_item.ground_item_amount += 1
 			else:
-				_create_item_button(_get_item_title(item), texture, item.prototype_id, item)
-				for current_item in _vbox_container.get_children():
-					if item.prototype_id == current_item.item_id:
-						if _givenInventory == inventory:
-							current_item.main_item_amount += 1
-						else:
-							current_item.ground_item_amount += 1
+				var hasRecyclableButtons: bool
+				var recyclableButton: Node
+				
+				for child in _vbox_container.get_children():
+					if child._is_wiped() == true:
+						hasRecyclableButtons = true
+						_recycle_item_button(child, _get_item_title(item), texture, item.prototype_id, item, _givenInventory)
+						break
+				
+				if hasRecyclableButtons == false:
+					_create_item_button(_get_item_title(item), texture, item.prototype_id, item, _givenInventory)
+
+
 
 func _update_capacity_progress_bar():
 	_capacity_progress_bar.max_value = inventory.capacity
@@ -177,7 +196,7 @@ func _update_capacity_progress_bar():
 			var newWeight: int = inventory.occupied_space + inventory.item_protoset.get_item_property(selected_inventory_item_id, "weight")
 			
 			if newWeight > inventory.capacity:
-				print("too heavy")
+				print("Item is too heavy.")
 				_possible_capacity_progress_bar.add_theme_stylebox_override("fill", possible_capacity_stylebox_heavy)
 				_possible_capacity_progress_bar.value = inventory.capacity
 			else:
@@ -188,18 +207,32 @@ func _update_capacity_progress_bar():
 	else:
 		_possible_capacity_progress_bar.value = 0
 
-func _sort_name(a, b) -> bool:
-	return a.Name < b.Name
-
-func _create_item_button(_item_title: String, _item_texture: Texture2D, _item_id: String, _item: InventoryItem):
+func _create_item_button(_item_title: String, _item_texture: Texture2D, _item_id: String, _item: InventoryItem, _given_inventory: Inventory):
 	var _inventory_item_button_instance = _inventory_item_button_scene.instantiate()
 	_inventory_item_button_instance.set_meta_data(_item_title, _item_texture, _item_id, _item)
 	_inventory_item_button_instance.button_group = _inventory_item_button_group
+	
+	if _given_inventory == inventory:
+		_inventory_item_button_instance.main_item_amount += 1
+	else:
+		_inventory_item_button_instance.ground_item_amount += 1
 	
 	if selected_inventory_item_id == _item_id:
 		_inventory_item_button_instance.button_pressed = true
 	
 	_vbox_container.add_child(_inventory_item_button_instance)
+
+func _recycle_item_button(_recycled_button: Node, _item_title: String, _item_texture: Texture2D, _item_id: String, _item: InventoryItem, _given_inventory: Inventory):
+	_recycled_button.set_meta_data(_item_title, _item_texture, _item_id, _item)
+	_recycled_button.button_group = _inventory_item_button_group
+	
+	if _given_inventory == inventory:
+		_recycled_button.main_item_amount += 1
+	else:
+		_recycled_button.ground_item_amount += 1
+	
+	if selected_inventory_item_id == _item_id:
+		_recycled_button.button_pressed = true
 
 func _pick_up_item(_picked_up_item_id: String):
 	var tempGroundItemInstanceArray = []
@@ -218,7 +251,7 @@ func _pick_up_item(_picked_up_item_id: String):
 			if inventory.can_add_item(ground_item):
 				inventory.add_item(ground_item)
 			else:
-				print("Item is too heavy.")
+				print("Can't add item.")
 				return
 			break
 	
@@ -259,10 +292,32 @@ func _drop_item(_dropped_item_id: String):
 	_refresh()
 
 func _show_ground_item(_ground_item: InventoryItem):
-	_refresh()
+	if(is_open):
+		_refresh()
 
 func _unshow_ground_item(_ground_item: InventoryItem):
-	_refresh()
+	if(is_open):
+		_refresh()
+
+func _popup_context_menu(_button_instance: Node, _item: InventoryItem, _id: String, _ground_amount: int, _inventory_amount: int):
+	var last_mouse_position = get_global_mouse_position()
+	_context_menu._populate_context_menu(_item, _id, _can_equip(_id), _ground_amount, _inventory_amount)
+	
+	await get_tree().create_timer(0.01).timeout
+	
+	_context_menu._popup_context_menu(last_mouse_position)
+
+func _hide_context_menu():
+	_context_menu._hide_context_menu()
+
+func _can_equip(_id: String) -> bool:
+	return inventory.item_protoset.get_item_property(_id, "equipable")
+
+func _can_equip_currently_selected(_item: InventoryItem) -> bool:
+	if selected_inventory_item_id != null:
+		return inventory.item_protoset.get_item_property(selected_inventory_item_id, "equipable")
+	else:
+		return false
 
 func _create_stick_on_floor():
 	var item: InventoryItem = InventoryItem.new()
@@ -305,5 +360,5 @@ func _on_item_modified(_item: InventoryItem) -> void:
 	_refresh()
 
 func _set_possible_capacity_style_boxes():
-	possible_capacity_stylebox_normal.bg_color = Color8(144, 181, 198)
-	possible_capacity_stylebox_heavy.bg_color = Color8(97, 49, 64)
+	possible_capacity_stylebox_normal.bg_color = Color8(144, 181, 255)
+	possible_capacity_stylebox_heavy.bg_color = Color8(255, 49, 64)

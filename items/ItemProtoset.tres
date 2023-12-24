@@ -9,7 +9,7 @@ json_data = "[
         \"id\": \"wooden_stick\",
         \"name\": \"Wooden Stick\",
 		\"image\": \"res://items/item sprites/item_sprite_wooden_stick.png\",
-		\"max_stack_size\": \"99\",
+		\"equipable\": \"true\",
 		\"weight\": \"1.0\",
         \"description\": \"A wooden stick from a tree.\"
     },
@@ -17,7 +17,7 @@ json_data = "[
         \"id\": \"small_stone\",
         \"name\": \"Small Stone\",
 		\"image\": \"res://items/item sprites/item_sprite_small_stone.png\",
-		\"max_stack_size\": \"99\",
+		\"equipable\": \"false\",
 		\"weight\": \"2.0\",
         \"description\": \"A mundane stone.\"
     },
@@ -25,7 +25,7 @@ json_data = "[
         \"id\": \"wood_log\",
         \"name\": \"Wood Log\",
 		\"image\": \"res://items/item sprites/item_sprite_wooden_log.png\",
-		\"max_stack_size\": \"99\",
+		\"equipable\": \"false\",
 		\"weight\": \"2.0\",
         \"description\": \"A wood log.\"
     }
