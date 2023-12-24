@@ -2,11 +2,10 @@ extends Button
 
 @export var ground_amount_label: Label
 @export var main_amount_label: Label
+@export var status_label: Label
 
 @export var left_button: Button
 @export var right_button: Button
-
-@export var popup_menu: PopupMenu
 
 @onready var inventoryList: Node = get_parent().get_parent()
 
@@ -14,6 +13,7 @@ var wiped: bool = false
 
 var main_item_amount: int
 var ground_item_amount: int
+var is_equipped: bool
 
 var item_id: String
 var item: InventoryItem
@@ -54,12 +54,19 @@ func _refresh():
 	else:
 		ground_amount_label.visible = false
 		right_button.visible = false
+	
+	if is_equipped:
+		status_label.visible = true
+		main_amount_label.visible = false
+	else:
+		status_label.visible = false
 
-func set_meta_data(_item_title: String, _item_texture: Texture2D, _item_id: String, _item: InventoryItem):
+func set_meta_data(_item_title: String, _item_texture: Texture2D, _item_id: String, _item: InventoryItem, _is_equipped: bool):
 	$Title.text = _item_title
 	$Texture.texture = _item_texture
 	item_id = _item_id
 	item = _item
+	is_equipped = _is_equipped
 	wiped = false
 
 func _on_pressed():
@@ -67,7 +74,7 @@ func _on_pressed():
 			inventoryList._update_capacity_progress_bar()
 
 func _on_left_button_pressed():
-	inventoryList._drop_item(item_id)
+	inventoryList._drop_item(item)
 
 func _on_right_button_pressed():
 	inventoryList._pick_up_item(item_id)

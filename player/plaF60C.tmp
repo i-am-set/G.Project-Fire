@@ -274,14 +274,12 @@ _texture_rect = NodePath("TextureRect")
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/InventoryUI/HandSlot"]
 layout_mode = 2
 
-[node name="ContextMenu" type="Panel" parent="CanvasLayer/InventoryUI" node_paths=PackedStringArray("_vbox_container", "_inventory_list")]
+[node name="ContextMenu" type="Panel" parent="CanvasLayer/InventoryUI"]
 layout_mode = 1
 offset_right = 27.0
 offset_bottom = 12.0
 theme = SubResource("Theme_2dhjr")
 script = ExtResource("11_vyrea")
-_vbox_container = NodePath("VBoxContainer")
-_inventory_list = NodePath("../InventoryList")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InventoryUI/ContextMenu"]
 layout_mode = 1

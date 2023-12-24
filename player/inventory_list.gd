@@ -52,6 +52,7 @@ var is_refreshing : bool = false
 var is_open : bool = false
 var current_frame : int = 0
 var selected_inventory_item_id: String = ""
+var equipped_item: InventoryItem = null
 
 func _get_configuration_warnings() -> PackedStringArray:
 	if inventory_path.is_empty():
@@ -67,8 +68,8 @@ func _ready():
 	_refresh()
 	_set_possible_capacity_style_boxes()
 
-#func _process(delta):
-	#_process_every_60_frames()
+func _process(delta):
+	_process_every_60_frames()
 
 func _process_every_60_frames():
 	current_frame += 1
@@ -78,6 +79,7 @@ func _process_every_60_frames():
 		current_frame = 0
 		
 		# call functions here
+		print(equipped_item)
 
 func _connect_inventory_signals() -> void:
 	if !inventory:
@@ -137,17 +139,25 @@ func _populate_list() -> void:
 	
 	# combine inventories with defining variables
 	var combinedInventories: Array = []
+	var sortedInventories: Array = []
 	
 	for item in inventoryItems:
-		combinedInventories.append({InventoryItem: item, Inventory: inventory})
+		if item._is_equipped:
+			sortedInventories.append({InventoryItem: item, Inventory: inventory})
+		else:
+			combinedInventories.append({InventoryItem: item, Inventory: inventory})
 	for item in groundItems:
 		combinedInventories.append({InventoryItem: item, Inventory: null})
 	
 	# sort the combined inventory array in alphbetical order
 	combinedInventories.sort_custom(func(a,b): return a[InventoryItem].prototype_id < b[InventoryItem].prototype_id)
 	
-	# populate the inventory list via the combined and sorted inventories
+	# add all items in the combined inventories after the equipped items
 	for entry in combinedInventories:
+		sortedInventories.append({InventoryItem: entry[InventoryItem], Inventory: entry[Inventory]})
+	
+	# populate the inventory list via the combined and sorted inventories
+	for entry in sortedInventories:
 		var item = entry[InventoryItem]
 		var _givenInventory = entry[Inventory]
 		
@@ -155,35 +165,38 @@ func _populate_list() -> void:
 		if !texture:
 			texture = default_item_icon
 			
+		
 		if _vbox_container.get_child_count() <= 0:
 			_create_item_button(_get_item_title(item), texture, item.prototype_id, item, _givenInventory)
 		else:
 			var tempItemIdList = []
 			
 			for current_item in _vbox_container.get_children():
-				tempItemIdList.append(current_item.item_id)
+				if current_item.item != equipped_item:
+					tempItemIdList.append(current_item.item_id)
 			
-			if item.prototype_id in tempItemIdList:
+			if item.prototype_id in tempItemIdList && item != equipped_item:
 				for current_item in _vbox_container.get_children():
-					if current_item.item_id == item.prototype_id:
+					if current_item.item_id == item.prototype_id && current_item.item != equipped_item:
 						if _givenInventory == inventory:
 							current_item.main_item_amount += 1
 						else:
 							current_item.ground_item_amount += 1
 			else:
-				var hasRecyclableButtons: bool
-				var recyclableButton: Node
-				
-				for child in _vbox_container.get_children():
-					if child._is_wiped() == true:
-						hasRecyclableButtons = true
-						_recycle_item_button(child, _get_item_title(item), texture, item.prototype_id, item, _givenInventory)
-						break
-				
-				if hasRecyclableButtons == false:
-					_create_item_button(_get_item_title(item), texture, item.prototype_id, item, _givenInventory)
+				_set_up_new_button(item, texture, _givenInventory)
 
-
+func _set_up_new_button(_item: InventoryItem, _texture: Texture2D, _givenInventory: Inventory):
+	var hasRecyclableButtons: bool
+	var recyclableButton: Node
+	
+	for child in _vbox_container.get_children():
+		if child._is_wiped() == true:
+			hasRecyclableButtons = true
+			_recycle_item_button(child, _get_item_title(_item), _texture, _item.prototype_id, _item, _givenInventory)
+			break
+	
+	if hasRecyclableButtons == false:
+		_create_item_button(_get_item_title(_item), _texture, _item.prototype_id, _item, _givenInventory)
 
 func _update_capacity_progress_bar():
 	_capacity_progress_bar.max_value = inventory.capacity
@@ -209,7 +222,7 @@ func _update_capacity_progress_bar():
 
 func _create_item_button(_item_title: String, _item_texture: Texture2D, _item_id: String, _item: InventoryItem, _given_inventory: Inventory):
 	var _inventory_item_button_instance = _inventory_item_button_scene.instantiate()
-	_inventory_item_button_instance.set_meta_data(_item_title, _item_texture, _item_id, _item)
+	_inventory_item_button_instance.set_meta_data(_item_title, _item_texture, _item_id, _item, _item._is_equipped)
 	_inventory_item_button_instance.button_group = _inventory_item_button_group
 	
 	if _given_inventory == inventory:
@@ -223,7 +236,7 @@ func _create_item_button(_item_title: String, _item_texture: Texture2D, _item_id
 	_vbox_container.add_child(_inventory_item_button_instance)
 
 func _recycle_item_button(_recycled_button: Node, _item_title: String, _item_texture: Texture2D, _item_id: String, _item: InventoryItem, _given_inventory: Inventory):
-	_recycled_button.set_meta_data(_item_title, _item_texture, _item_id, _item)
+	_recycled_button.set_meta_data(_item_title, _item_texture, _item_id, _item, _item._is_equipped)
 	_recycled_button.button_group = _inventory_item_button_group
 	
 	if _given_inventory == inventory:
@@ -264,30 +277,30 @@ func _pick_up_item(_picked_up_item_id: String):
 			
 	_refresh()
 
-func _drop_item(_dropped_item_id: String):
+func _drop_item(_dropped_item: InventoryItem):
 	var tempItemList = []
 	for item in inventory.get_items():
-		tempItemList.append(item.prototype_id)
-	if !_dropped_item_id in tempItemList:
+		tempItemList.append(item)
+	if !_dropped_item in tempItemList:
 		print("No item to drop.")
 		return
 	
-	var ground_item = _ground_item.instantiate()
-	
 	#remove the item from the inventory
-	for item in inventory.get_items():
-		if item.prototype_id == _dropped_item_id:
-			if(inventory._can_remove_item(item)):
-				inventory.remove_item(item)
+	if _dropped_item in inventory.get_items():
+		if(inventory._can_remove_item(_dropped_item)):
+			var ground_item = _ground_item.instantiate()
+			
+			if _dropped_item._is_equipped:
+				_unequip(_dropped_item)
+			
+			inventory.remove_item(_dropped_item)
 			
 			ground_item.global_position = _player._get_random_position_around_player(_player.dropRadius)
-			if inventory.get_items().size() >= 0:
-				ground_item.item = item
-				ground_item.item_id = item.prototype_id
-				ground_item.place_ground_item()
-			break
-	
-	_entities_node.add_child(ground_item)
+			ground_item.item = _dropped_item
+			ground_item.item_id = _dropped_item.prototype_id
+			ground_item.place_ground_item()
+			
+			_entities_node.add_child(ground_item)
 	
 	_refresh()
 
@@ -305,13 +318,36 @@ func _popup_context_menu(_button_instance: Node, _item: InventoryItem, _id: Stri
 	
 	await get_tree().create_timer(0.01).timeout
 	
-	_context_menu._popup_context_menu(last_mouse_position)
+	_context_menu._relocate_context_menu(last_mouse_position)
 
 func _hide_context_menu():
 	_context_menu._hide_context_menu()
 
+func _equip(_item_to_equip: InventoryItem):
+	if equipped_item != null:
+		_unequip(equipped_item)
+	
+	for item in inventory.get_items():
+		if item.prototype_id == _item_to_equip.prototype_id:
+			item._is_equipped = true
+			equipped_item = item
+			break
+	_refresh()
+
+func _unequip(_item_to_unequip: InventoryItem):
+	for item in inventory.get_items():
+		if item == _item_to_unequip:
+			item._is_equipped = false
+			equipped_item = null
+			break
+	_refresh()
+
 func _can_equip(_id: String) -> bool:
-	return inventory.item_protoset.get_item_property(_id, "equipable")
+	if inventory.item_protoset.get_item_property(_id, "equipable") == false:
+		return false
+	if !inventory.has_item_by_id(_id):
+		return false
+	return true
 
 func _can_equip_currently_selected(_item: InventoryItem) -> bool:
 	if selected_inventory_item_id != null:

@@ -43,6 +43,8 @@ signal properties_changed
 		properties_changed.emit()
 		update_configuration_warnings()
 
+var _is_equipped: bool
+
 var _inventory: Node
 
 const KEY_PROTOSET: String = "protoset"
