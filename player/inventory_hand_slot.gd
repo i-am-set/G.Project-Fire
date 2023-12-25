@@ -102,6 +102,11 @@ func _get_gloot() -> Node:
 func _get_singleton() -> Node:
 	return null
 
+func _equip_slot(_item: InventoryItem):
+	item_slot.item = _item
+
+func _unequip_slot():
+	item_slot.item = null
 
 func _refresh() -> void:
 	_clear()

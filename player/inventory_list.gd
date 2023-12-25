@@ -68,8 +68,8 @@ func _ready():
 	_refresh()
 	_set_possible_capacity_style_boxes()
 
-func _process(delta):
-	_process_every_60_frames()
+#func _process(delta):
+	#_process_every_60_frames()
 
 func _process_every_60_frames():
 	current_frame += 1
@@ -79,7 +79,6 @@ func _process_every_60_frames():
 		current_frame = 0
 		
 		# call functions here
-		print(equipped_item)
 
 func _connect_inventory_signals() -> void:
 	if !inventory:
@@ -332,6 +331,9 @@ func _equip(_item_to_equip: InventoryItem):
 			item._is_equipped = true
 			equipped_item = item
 			break
+	
+	_hand_slot._equip_slot(_item_to_equip)
+	
 	_refresh()
 
 func _unequip(_item_to_unequip: InventoryItem):
@@ -340,6 +342,9 @@ func _unequip(_item_to_unequip: InventoryItem):
 			item._is_equipped = false
 			equipped_item = null
 			break
+	
+	_hand_slot._unequip_slot()
+	
 	_refresh()
 
 func _can_equip(_id: String) -> bool:
