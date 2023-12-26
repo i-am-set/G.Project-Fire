@@ -37,7 +37,7 @@ var item_slot: ItemSlot :
 		_refresh()
 
 
-@export var _texture_rect: TextureRect
+@onready var _texture_rect: TextureRect = get_child(0)
 
 var _gloot: Node = null
 

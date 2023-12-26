@@ -1,4 +1,4 @@
-extends Area2D
+extends Area3D
 
 @onready var parent_node: Node = get_parent()
 

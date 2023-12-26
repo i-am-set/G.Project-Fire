@@ -1,12 +1,12 @@
 extends Panel
 
+@export var _inventory_list: ScrollContainer
+@export var _vbox_container: VBoxContainer
+
 @onready var _all_context_buttons: Array = _vbox_container.get_children()
 @onready var _button_equip: Button = _vbox_container.get_child(0)
 @onready var _button_pick_up: Button = _vbox_container.get_child(1)
 @onready var _button_drop: Button = _vbox_container.get_child(2)
-
-@export var _vbox_container: VBoxContainer
-@export var _inventory_list: ScrollContainer
 
 var _current_item: InventoryItem
 var _current_item_id: String

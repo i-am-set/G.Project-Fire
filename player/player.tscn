@@ -14,30 +14,6 @@
 [ext_resource type="Script" path="res://player/inventory_hand_slot.gd" id="10_l200h"]
 [ext_resource type="Script" path="res://player/inventory_context_menu.gd" id="11_vyrea"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_e4n5o"]
-shader = ExtResource("4_yfs2f")
-shader_parameter/overlay = false
-shader_parameter/scanlines_opacity = 0.05
-shader_parameter/scanlines_width = 0.1
-shader_parameter/grille_opacity = 0.05
-shader_parameter/resolution = Vector2(640, 360)
-shader_parameter/pixelate = false
-shader_parameter/roll = true
-shader_parameter/roll_speed = 1.0
-shader_parameter/roll_size = 15.0
-shader_parameter/roll_variation = 1.8
-shader_parameter/distort_intensity = 0.0
-shader_parameter/noise_opacity = 0.04
-shader_parameter/noise_speed = 5.0
-shader_parameter/static_noise_intensity = 0.05
-shader_parameter/aberration = 4.75e-08
-shader_parameter/brightness = 1.0
-shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.0
-shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.75
-shader_parameter/vignette_opacity = 0.5
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fuuk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3x8ck"]
@@ -81,6 +57,30 @@ Button/styles/focus = SubResource("StyleBoxEmpty_ldb6t")
 Button/styles/hover = SubResource("StyleBoxFlat_vrd3a")
 Button/styles/normal = SubResource("StyleBoxFlat_3ch0r")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e4n5o"]
+shader = ExtResource("4_yfs2f")
+shader_parameter/overlay = false
+shader_parameter/scanlines_opacity = 0.05
+shader_parameter/scanlines_width = 0.1
+shader_parameter/grille_opacity = 0.05
+shader_parameter/resolution = Vector2(1920, 1080)
+shader_parameter/pixelate = true
+shader_parameter/roll = true
+shader_parameter/roll_speed = 1.0
+shader_parameter/roll_size = 15.0
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.0
+shader_parameter/noise_opacity = 0.04
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.05
+shader_parameter/aberration = 4.75e-08
+shader_parameter/brightness = 1.0
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.0
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.75
+shader_parameter/vignette_opacity = 0.5
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h1135"]
 size = Vector2(6, 6)
 
@@ -95,26 +95,6 @@ sprite = NodePath("Sprite2D")
 inventory_list = NodePath("CanvasLayer/InventoryUI/InventoryList")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="Shader" type="Control" parent="CanvasLayer"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Shader ColorRect" type="ColorRect" parent="CanvasLayer/Shader"]
-texture_filter = 1
-material = SubResource("ShaderMaterial_e4n5o")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="InventoryUI" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("inventory_list", "capacity_progress_bar")]
 layout_mode = 3
@@ -232,7 +212,7 @@ value = 21.31
 rounded = true
 show_percentage = false
 
-[node name="InventoryList" type="ScrollContainer" parent="CanvasLayer/InventoryUI" node_paths=PackedStringArray("_capacity_progress_bar", "_possible_capacity_progress_bar", "_vbox_container", "_pickup_area", "_hand_slot", "_context_menu")]
+[node name="InventoryList" type="ScrollContainer" parent="CanvasLayer/InventoryUI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -247,12 +227,6 @@ theme = SubResource("Theme_d5rai")
 horizontal_scroll_mode = 0
 script = ExtResource("7_c5juy")
 inventory_path = NodePath("../Main Inventory")
-_capacity_progress_bar = NodePath("../CapacityProgressBar")
-_possible_capacity_progress_bar = NodePath("../CapacityProgressBar/PossibleCapacityProgressBar")
-_vbox_container = NodePath("VBoxContainer")
-_pickup_area = NodePath("../../../PickupArea")
-_hand_slot = NodePath("../HandSlot")
-_context_menu = NodePath("../ContextMenu")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InventoryUI/InventoryList"]
 layout_mode = 2
@@ -260,7 +234,7 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="HandSlot" type="PanelContainer" parent="CanvasLayer/InventoryUI" node_paths=PackedStringArray("_texture_rect")]
+[node name="HandSlot" type="PanelContainer" parent="CanvasLayer/InventoryUI"]
 layout_mode = 0
 offset_left = 335.0
 offset_top = 51.0
@@ -269,18 +243,16 @@ offset_bottom = 91.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_15ncr")
 script = ExtResource("10_l200h")
 item_slot_path = NodePath("../Hand Slot Inventory")
-_texture_rect = NodePath("TextureRect")
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/InventoryUI/HandSlot"]
 layout_mode = 2
 
-[node name="ContextMenu" type="Panel" parent="CanvasLayer/InventoryUI" node_paths=PackedStringArray("_vbox_container", "_inventory_list")]
+[node name="ContextMenu" type="Panel" parent="CanvasLayer/InventoryUI" node_paths=PackedStringArray("_inventory_list")]
 layout_mode = 1
 offset_right = 27.0
 offset_bottom = 12.0
 theme = SubResource("Theme_2dhjr")
 script = ExtResource("11_vyrea")
-_vbox_container = NodePath("VBoxContainer")
 _inventory_list = NodePath("../InventoryList")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InventoryUI/ContextMenu"]
@@ -311,6 +283,26 @@ custom_minimum_size = Vector2(200, 20)
 layout_mode = 2
 text = "DROP"
 
+[node name="Shader" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Shader ColorRect" type="ColorRect" parent="CanvasLayer/Shader"]
+texture_filter = 1
+material = SubResource("ShaderMaterial_e4n5o")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(0, -12)
@@ -321,7 +313,6 @@ hframes = 3
 shape = SubResource("RectangleShape2D_h1135")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 
 [node name="PickupArea" type="Area2D" parent="."]

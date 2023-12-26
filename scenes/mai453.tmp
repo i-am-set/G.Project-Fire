@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=3 uid="uid://dagvbret0s0mo"]
+
+[ext_resource type="Texture2D" uid="uid://npag4na8350g" path="res://icon.svg" id="1_ss7f1"]
+[ext_resource type="Script" path="res://scenes/player_logic.gd" id="2_y0aoh"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_k2rqy"]
+size = Vector2(200, 200)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pdbh1"]
+albedo_texture = ExtResource("1_ss7f1")
+uv1_scale = Vector3(50, 50, 50)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_y2l8n"]
+radius = 1.0
+height = 5.0
+
+[node name="Main3d" type="Node3D"]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="World" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World"]
+mesh = SubResource("PlaneMesh_k2rqy")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_pdbh1")
+
+[node name="Player_Entity" type="CharacterBody3D" parent="SubViewportContainer/SubViewport/World"]
+script = ExtResource("2_y0aoh")
+
+[node name="CameraPivot" type="Node3D" parent="SubViewportContainer/SubViewport/World/Player_Entity"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 1, 0)
+
+[node name="Origin" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World/Player_Entity/CameraPivot"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/World/Player_Entity/CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 75, 75)
+projection = 1
+size = 30.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/World/Player_Entity"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.53281, 0)
+shape = SubResource("CapsuleShape3D_y2l8n")

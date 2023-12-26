@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://b7ufhdruknu5p"]
+[gd_scene load_steps=16 format=3 uid="uid://b7ufhdruknu5p"]
 
 [ext_resource type="FontFile" uid="uid://c7v06xlyp2cvh" path="res://fonts/04B_03__/04B_03__.TTF" id="1_t57o8"]
 [ext_resource type="Script" path="res://player/inventory_item_button.gd" id="2_dnoo0"]
@@ -40,10 +40,6 @@ Label/constants/outline_size = 4
 Label/font_sizes/font_size = 8
 Label/fonts/font = SubResource("FontVariation_y3y2i")
 
-[sub_resource type="FontVariation" id="FontVariation_38auq"]
-base_font = ExtResource("1_t57o8")
-variation_embolden = 1.15
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o73io"]
 bg_color = Color(0.0901961, 0.0666667, 0.101961, 1)
 anti_aliasing = false
@@ -57,8 +53,9 @@ anti_aliasing = false
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mna70"]
 
 [node name="Inventory Item" type="Button" node_paths=PackedStringArray("ground_amount_label", "main_amount_label", "status_label", "left_button", "right_button")]
+custom_minimum_size = Vector2(0, 12)
 offset_right = 154.0
-offset_bottom = 14.0
+offset_bottom = 10.0
 focus_mode = 0
 theme = SubResource("Theme_ox2kf")
 toggle_mode = true
@@ -76,11 +73,11 @@ right_button = NodePath("RightButton")
 [node name="Title" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.352
+anchor_left = 0.266
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -13.208
+offset_left = 0.0359993
 offset_top = -7.0
 offset_right = -28.0
 offset_bottom = 7.0
@@ -128,15 +125,15 @@ stretch_mode = 2
 [node name="LeftButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.261
-anchor_bottom = 0.261
-offset_top = -3.654
-offset_right = 13.0
-offset_bottom = 9.346
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -6.0
+offset_right = 12.0
+offset_bottom = 6.0
 grow_vertical = 2
 focus_mode = 0
 mouse_filter = 1
-theme_override_fonts/font = SubResource("FontVariation_38auq")
+theme_override_fonts/font = ExtResource("1_t57o8")
 theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxFlat_o73io")
 theme_override_styles/hover = SubResource("StyleBoxFlat_o73io")
@@ -144,23 +141,22 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_o73io")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_wdxbd")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_dp1jp")
 text = "<"
-clip_text = true
 
 [node name="RightButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
-anchor_top = 0.261
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.261
-offset_left = -13.0
-offset_top = -3.654
-offset_bottom = 9.346
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -6.0
+offset_bottom = 6.0
 grow_horizontal = 0
 grow_vertical = 2
 focus_mode = 0
 mouse_filter = 1
-theme_override_fonts/font = SubResource("FontVariation_38auq")
+theme_override_fonts/font = ExtResource("1_t57o8")
 theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxFlat_o73io")
 theme_override_styles/hover = SubResource("StyleBoxFlat_o73io")
@@ -175,13 +171,14 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 33.0
-offset_top = -11.5
-offset_right = 57.0
-offset_bottom = 11.5
+offset_left = 13.0
+offset_top = -7.0
+offset_right = 27.0
+offset_bottom = 7.0
 grow_vertical = 2
-text = "
-"
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Main Quantity" type="Label" parent="."]
 visible = false
@@ -191,13 +188,14 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -62.0
-offset_top = -11.5
-offset_right = -38.0
-offset_bottom = 11.5
+offset_left = -27.0
+offset_top = -7.0
+offset_right = -13.0
+offset_bottom = 7.0
 grow_horizontal = 0
 grow_vertical = 2
-horizontal_alignment = 2
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="pressed" from="." to="." method="_on_pressed"]

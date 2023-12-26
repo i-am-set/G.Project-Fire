@@ -32,21 +32,21 @@ var inventory: Inventory = null :
 		inventory = new_inventory
 		_connect_inventory_signals()
 
-@onready var _player : Node = get_parent().get_parent().get_parent()
-@onready var _entities_node : Node = get_tree().root.get_node("main").get_node("Entities")
-@onready var possible_capacity_stylebox_normal = _possible_capacity_progress_bar.get_theme_stylebox("fill").duplicate()
-@onready var possible_capacity_stylebox_heavy = _possible_capacity_progress_bar.get_theme_stylebox("fill").duplicate()
 
 var _inventory_item_button_scene = preload("res://player/inventory_item.tscn")
 var _inventory_item_button_group = preload("res://player/inventory_item_button_group.tres")
 var _ground_item = preload("res://items/ground_item.tscn")
 
-@export var _capacity_progress_bar: ProgressBar
-@export var _possible_capacity_progress_bar: ProgressBar
-@export var _vbox_container: VBoxContainer
-@export var _pickup_area: Area2D
-@export var _hand_slot: PanelContainer
-@export var _context_menu: Panel
+@export var _player : Node
+@onready var _capacity_progress_bar: ProgressBar = get_parent().get_node("CapacityProgressBar")
+@onready var _possible_capacity_progress_bar: ProgressBar = _capacity_progress_bar.get_child(0)
+@onready var _vbox_container: VBoxContainer = get_child(0)
+@onready var _pickup_area: Area3D = _player.get_node("PickupArea")
+@onready var _hand_slot: PanelContainer = get_parent().get_node("HandSlot")
+@onready var _context_menu: Panel = get_parent().get_node("ContextMenu")
+@export var _entities_node : Node
+@onready var possible_capacity_stylebox_normal = _possible_capacity_progress_bar.get_theme_stylebox("fill").duplicate()
+@onready var possible_capacity_stylebox_heavy = _possible_capacity_progress_bar.get_theme_stylebox("fill").duplicate()
 
 var is_refreshing : bool = false
 var is_open : bool = false
@@ -186,7 +186,6 @@ func _populate_list() -> void:
 
 func _set_up_new_button(_item: InventoryItem, _texture: Texture2D, _givenInventory: Inventory):
 	var hasRecyclableButtons: bool
-	var recyclableButton: Node
 	
 	for child in _vbox_container.get_children():
 		if child._is_wiped() == true:
@@ -294,12 +293,12 @@ func _drop_item(_dropped_item: InventoryItem):
 			
 			inventory.remove_item(_dropped_item)
 			
+			_entities_node.add_child(ground_item)
+			
 			ground_item.global_position = _player._get_random_position_around_player(_player.dropRadius)
 			ground_item.item = _dropped_item
 			ground_item.item_id = _dropped_item.prototype_id
 			ground_item.place_ground_item()
-			
-			_entities_node.add_child(ground_item)
 	
 	_refresh()
 

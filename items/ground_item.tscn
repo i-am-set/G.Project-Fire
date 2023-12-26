@@ -3,16 +3,19 @@
 [ext_resource type="Script" path="res://items/ground_item.gd" id="1_dino3"]
 [ext_resource type="Texture2D" uid="uid://br7hhqhn0ookr" path="res://items/item sprites/item_sprite_wooden_stick.png" id="2_nxj7g"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_ex350"]
-radius = 13.1529
+[sub_resource type="SphereShape3D" id="SphereShape3D_541pm"]
+radius = 0.605209
 
-[node name="Ground Item" type="Area2D"]
+[node name="GroundItem" type="Area3D"]
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("1_dino3")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite3D" type="Sprite3D" parent="."]
+pixel_size = 0.1
+billboard = 1
+texture_filter = 0
 texture = ExtResource("2_nxj7g")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_ex350")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_541pm")

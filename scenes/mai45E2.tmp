@@ -1,0 +1,331 @@
+[gd_scene load_steps=31 format=3 uid="uid://dagvbret0s0mo"]
+
+[ext_resource type="Texture2D" uid="uid://npag4na8350g" path="res://icon.svg" id="1_ss7f1"]
+[ext_resource type="Script" path="res://scenes/player_logic.gd" id="2_y0aoh"]
+[ext_resource type="Texture2D" uid="uid://5m7a5h7rqpb5" path="res://player/player_sprite-sheet.png" id="3_c0rsr"]
+[ext_resource type="Script" path="res://player/s_inventory_ui.gd" id="4_j5u2o"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_stacked.gd" id="5_6s8cu"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="5_xl087"]
+[ext_resource type="Script" path="res://player/item_pickup_logic.gd" id="6_bmr5q"]
+[ext_resource type="Resource" uid="uid://ce4mhybtf2huv" path="res://items/ItemProtoset.tres" id="6_hydpu"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_10ldc"]
+[ext_resource type="FontFile" uid="uid://cedsj1jra6naq" path="res://fonts/Open Sans/static/OpenSans-Bold.ttf" id="9_28ym1"]
+[ext_resource type="Script" path="res://player/inventory_list.gd" id="10_upfxk"]
+[ext_resource type="Script" path="res://player/inventory_hand_slot.gd" id="11_e2750"]
+[ext_resource type="Script" path="res://player/inventory_context_menu.gd" id="12_sqk2t"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_k2rqy"]
+size = Vector2(200, 200)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pdbh1"]
+albedo_texture = ExtResource("1_ss7f1")
+uv1_scale = Vector3(50, 50, 50)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_y2l8n"]
+radius = 1.0
+height = 3.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_bhnr6"]
+height = 0.798799
+radius = 2.47257
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fuuk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3x8ck"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_os8g4"]
+ProgressBar/styles/background = SubResource("StyleBoxFlat_6fuuk")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_3x8ck")
+
+[sub_resource type="FontVariation" id="FontVariation_2fi48"]
+base_font = ExtResource("9_28ym1")
+spacing_glyph = 1
+
+[sub_resource type="Theme" id="Theme_uroup"]
+default_font = SubResource("FontVariation_2fi48")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u4wx5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_16s0o"]
+bg_color = Color(0, 0.647059, 0.905882, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2rhmx"]
+
+[sub_resource type="FontVariation" id="FontVariation_yk2tl"]
+base_font = ExtResource("9_28ym1")
+spacing_glyph = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ldb6t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vrd3a"]
+bg_color = Color(0.231373, 0.231373, 0.231373, 0.454902)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ch0r"]
+bg_color = Color(0.164706, 0.164706, 0.164706, 0.792157)
+anti_aliasing = false
+
+[sub_resource type="Theme" id="Theme_cy1kv"]
+Button/font_sizes/font_size = 11
+Button/fonts/font = SubResource("FontVariation_yk2tl")
+Button/styles/focus = SubResource("StyleBoxEmpty_ldb6t")
+Button/styles/hover = SubResource("StyleBoxFlat_vrd3a")
+Button/styles/normal = SubResource("StyleBoxFlat_3ch0r")
+
+[node name="main3d" type="Node3D"]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="World" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World"]
+mesh = SubResource("PlaneMesh_k2rqy")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_pdbh1")
+
+[node name="Entities" type="Node3D" parent="SubViewportContainer/SubViewport/World"]
+
+[node name="Player_Entity" type="CharacterBody3D" parent="SubViewportContainer/SubViewport/World/Entities" node_paths=PackedStringArray("sprite", "inventory_list", "camera", "camera_pivot")]
+script = ExtResource("2_y0aoh")
+sprite = NodePath("Sprite3D")
+inventory_list = NodePath("../../../../../CanvasLayer/InventoryUI/InventoryList")
+camera = NodePath("camera_pivot/Camera3D")
+camera_pivot = NodePath("camera_pivot")
+
+[node name="Main Inventory" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity"]
+script = ExtResource("5_6s8cu")
+capacity = 25.0
+item_protoset = ExtResource("6_hydpu")
+
+[node name="_Node_54064" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory"]
+script = ExtResource("5_xl087")
+protoset = ExtResource("6_hydpu")
+prototype_id = "wooden_stick"
+
+[node name="_Node_54083" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory"]
+script = ExtResource("5_xl087")
+protoset = ExtResource("6_hydpu")
+prototype_id = "small_stone"
+
+[node name="_Node_54102" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory"]
+script = ExtResource("5_xl087")
+protoset = ExtResource("6_hydpu")
+prototype_id = "wood_log"
+
+[node name="_Node_54121" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory"]
+script = ExtResource("5_xl087")
+protoset = ExtResource("6_hydpu")
+prototype_id = "wooden_stick"
+
+[node name="_Node_54140" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory"]
+script = ExtResource("5_xl087")
+protoset = ExtResource("6_hydpu")
+prototype_id = "small_stone"
+
+[node name="_Node_54159" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory"]
+script = ExtResource("5_xl087")
+protoset = ExtResource("6_hydpu")
+prototype_id = "wood_log"
+
+[node name="_Node_54178" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory"]
+script = ExtResource("5_xl087")
+protoset = ExtResource("6_hydpu")
+prototype_id = "small_stone"
+
+[node name="_Node_54197" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory"]
+script = ExtResource("5_xl087")
+protoset = ExtResource("6_hydpu")
+prototype_id = "wood_log"
+
+[node name="_Node_54216" type="Node" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory"]
+script = ExtResource("5_xl087")
+protoset = ExtResource("6_hydpu")
+prototype_id = "wood_log"
+
+[node name="Sprite3D" type="Sprite3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.30128, 0)
+pixel_size = 0.1
+billboard = 1
+texture_filter = 0
+texture = ExtResource("3_c0rsr")
+hframes = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.47382, 0)
+shape = SubResource("CapsuleShape3D_y2l8n")
+
+[node name="camera_pivot" type="Node3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 1, 0)
+
+[node name="Origin" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/camera_pivot"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/camera_pivot"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 75, 75)
+projection = 1
+size = 80.0
+
+[node name="PickupArea" type="Area3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity"]
+script = ExtResource("6_bmr5q")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/PickupArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.410817, 0)
+shape = SubResource("CylinderShape3D_bhnr6")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="InventoryUI" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("inventory_list", "capacity_progress_bar")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_os8g4")
+script = ExtResource("4_j5u2o")
+inventory_list = NodePath("InventoryList")
+capacity_progress_bar = NodePath("CapacityProgressBar")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/InventoryUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 290.0
+offset_top = 91.0
+offset_right = -994.0
+offset_bottom = -91.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.219608, 0.254902, 0.313726, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer/InventoryUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 937.0
+offset_top = 91.0
+offset_right = -347.0
+offset_bottom = -91.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.219608, 0.254902, 0.313726, 1)
+
+[node name="Hand Slot Inventory" type="Node" parent="CanvasLayer/InventoryUI"]
+script = ExtResource("8_10ldc")
+inventory_path = NodePath("../../../SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory")
+
+[node name="InventoryList" type="ScrollContainer" parent="CanvasLayer/InventoryUI" node_paths=PackedStringArray("_player", "_entities_node")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 290.0
+offset_top = 91.0
+offset_right = -994.0
+offset_bottom = -101.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_uroup")
+horizontal_scroll_mode = 0
+script = ExtResource("10_upfxk")
+inventory_path = NodePath("../../../SubViewportContainer/SubViewport/World/Entities/Player_Entity/Main Inventory")
+_player = NodePath("../../../SubViewportContainer/SubViewport/World/Entities/Player_Entity")
+_entities_node = NodePath("../../../SubViewportContainer/SubViewport/World/Entities")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InventoryUI/InventoryList"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="CapacityProgressBar" type="ProgressBar" parent="CanvasLayer/InventoryUI"]
+z_index = 1
+layout_mode = 2
+offset_left = 290.0
+offset_top = 979.0
+offset_right = 926.0
+offset_bottom = 989.0
+size_flags_horizontal = 3
+theme_override_styles/background = SubResource("StyleBoxEmpty_u4wx5")
+value = 15.5
+rounded = true
+show_percentage = false
+
+[node name="PossibleCapacityProgressBar" type="ProgressBar" parent="CanvasLayer/InventoryUI/CapacityProgressBar"]
+z_as_relative = false
+layout_mode = 2
+offset_right = 636.0
+offset_bottom = 10.0
+size_flags_horizontal = 3
+theme_override_styles/fill = SubResource("StyleBoxFlat_16s0o")
+value = 21.31
+rounded = true
+show_percentage = false
+
+[node name="HandSlot" type="PanelContainer" parent="CanvasLayer/InventoryUI"]
+layout_mode = 0
+offset_left = 981.0
+offset_top = 121.0
+offset_right = 1087.0
+offset_bottom = 227.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_2rhmx")
+script = ExtResource("11_e2750")
+item_slot_path = NodePath("../Hand Slot Inventory")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/InventoryUI/HandSlot"]
+layout_mode = 2
+
+[node name="ContextMenu" type="Panel" parent="CanvasLayer/InventoryUI" node_paths=PackedStringArray("_inventory_list", "_vbox_container")]
+layout_mode = 1
+offset_right = 27.0
+offset_bottom = 12.0
+theme = SubResource("Theme_cy1kv")
+script = ExtResource("12_sqk2t")
+_inventory_list = NodePath("../InventoryList")
+_vbox_container = NodePath("VBoxContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InventoryUI/ContextMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="EquipButton" type="Button" parent="CanvasLayer/InventoryUI/ContextMenu/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+text = "EQUIP"
+
+[node name="PickUpButton" type="Button" parent="CanvasLayer/InventoryUI/ContextMenu/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+text = "PICKUP"
+
+[node name="DropButton" type="Button" parent="CanvasLayer/InventoryUI/ContextMenu/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+text = "DROP"
+
+[connection signal="gui_input" from="CanvasLayer/InventoryUI/ContextMenu" to="CanvasLayer/InventoryUI/ContextMenu" method="_on_gui_input"]
+[connection signal="pressed" from="CanvasLayer/InventoryUI/ContextMenu/VBoxContainer/EquipButton" to="CanvasLayer/InventoryUI/ContextMenu" method="_on_equip_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/InventoryUI/ContextMenu/VBoxContainer/PickUpButton" to="CanvasLayer/InventoryUI/ContextMenu" method="_on_pick_up_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/InventoryUI/ContextMenu/VBoxContainer/DropButton" to="CanvasLayer/InventoryUI/ContextMenu" method="_on_drop_button_pressed"]
