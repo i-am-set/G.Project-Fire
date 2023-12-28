@@ -39,6 +39,9 @@ func _ready():
 	_connect_item_slot_signals()
 
 func _refresh():
+	if !inventoryList.is_open:
+		return
+	
 	if main_item_amount > 0:
 		main_amount_label.text = str(main_item_amount)
 		main_amount_label.visible = true

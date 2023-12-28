@@ -101,7 +101,7 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _refresh() -> void:
-	if is_refreshing:
+	if is_refreshing or !is_inside_tree():
 		return
 	
 	is_refreshing = true
