@@ -1,6 +1,7 @@
-[gd_scene load_steps=30 format=3 uid="uid://dagvbret0s0mo"]
+[gd_scene load_steps=31 format=3 uid="uid://dagvbret0s0mo"]
 
 [ext_resource type="Texture2D" uid="uid://npag4na8350g" path="res://icon.svg" id="1_ss7f1"]
+[ext_resource type="Script" path="res://map/gridmap.gd" id="2_okjv2"]
 [ext_resource type="Script" path="res://scenes/player_logic.gd" id="2_y0aoh"]
 [ext_resource type="Texture2D" uid="uid://5m7a5h7rqpb5" path="res://player/player_sprite-sheet.png" id="3_c0rsr"]
 [ext_resource type="Script" path="res://player/s_inventory_ui.gd" id="4_j5u2o"]
@@ -87,6 +88,9 @@ render_target_update_mode = 4
 mesh = SubResource("PlaneMesh_k2rqy")
 skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_pdbh1")
+
+[node name="GridMap" type="GridMap" parent="SubViewportContainer/SubViewport/World"]
+script = ExtResource("2_okjv2")
 
 [node name="Entities" type="Node3D" parent="SubViewportContainer/SubViewport/World"]
 
