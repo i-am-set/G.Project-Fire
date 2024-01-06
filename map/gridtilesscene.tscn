@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dax3bgad042qq"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_3snhd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fbfud"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_18rs0"]
+albedo_color = Color(0.619608, 1, 1, 1)
+
+[node name="Tiles" type="Node3D"]
+
+[node name="SnowTile" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_3snhd")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_fbfud")
+
+[node name="IceTile" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_3snhd")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_18rs0")

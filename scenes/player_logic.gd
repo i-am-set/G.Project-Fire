@@ -14,7 +14,7 @@ var moveDir: Vector2 = Vector2(-1, 0)
 var forward: Vector2
 var rawVelocity: Vector3
 
-const ROTATESPEED: float = 0.05
+const ROTATESPEED: float = 1
 const SPEED: float  =  7.0
 const ACCEL: float  = 5
 
@@ -71,7 +71,10 @@ func _rotate():
 func _move(_delta: float, playerInput: Vector2):
 	velocity = lerp(velocity,  Vector3(playerInput.x * SPEED, 0, playerInput.y * SPEED), _delta * ACCEL)
 	
-	player_model.look_at(global_position - velocity, Vector3.UP)
+	var new_position = global_position - velocity
+	
+	if new_position != global_position:
+		player_model.look_at(global_position - velocity, Vector3.UP)
 	#_set_sprite(_delta)
 	
 	if(_check_if_busy() == true):
