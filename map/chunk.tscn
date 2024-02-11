@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8ak4m002htsi"]
+
+[ext_resource type="Script" path="res://map/Chunk.gd" id="1_yrw2c"]
+
+[node name="Chunk" type="MeshInstance3D"]
+script = ExtResource("1_yrw2c")
+Terrain_Size = 400
+resolution = 1

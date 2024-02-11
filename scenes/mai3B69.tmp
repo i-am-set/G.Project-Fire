@@ -1,12 +1,10 @@
-[gd_scene load_steps=35 format=3 uid="uid://dagvbret0s0mo"]
+[gd_scene load_steps=30 format=3 uid="uid://dagvbret0s0mo"]
 
 [ext_resource type="MeshLibrary" uid="uid://c8sktqtcwfsu6" path="res://map/gridtileslibrary.tres" id="1_dpn5m"]
 [ext_resource type="PackedScene" uid="uid://dtjkwkmobbvwg" path="res://map/day_night_cylce.tscn" id="1_hlucq"]
-[ext_resource type="Script" path="res://map/Infinite_World_Gen.gd" id="2_eu0o7"]
 [ext_resource type="Script" path="res://map/gridmap.gd" id="2_okjv2"]
 [ext_resource type="Script" path="res://scenes/player_logic.gd" id="2_y0aoh"]
 [ext_resource type="Texture2D" uid="uid://5m7a5h7rqpb5" path="res://player/player_sprite-sheet.png" id="3_c0rsr"]
-[ext_resource type="PackedScene" uid="uid://b8ak4m002htsi" path="res://map/chunk.tscn" id="3_t7vie"]
 [ext_resource type="Script" path="res://player/s_inventory_ui.gd" id="4_j5u2o"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_stacked.gd" id="5_6s8cu"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="5_xl087"]
@@ -19,12 +17,6 @@
 [ext_resource type="FontFile" uid="uid://0k5jd3kk5vkg" path="res://fonts/Inter/Inter-VariableFont_slnt,wght.ttf" id="12_8ttng"]
 [ext_resource type="Script" path="res://player/inventory_context_menu.gd" id="12_sqk2t"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_3xg46"]
-noise_type = 3
-seed = 12321
-frequency = 0.008
-domain_warp_enabled = true
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_y2l8n"]
 radius = 1.0
 height = 3.0
@@ -32,13 +24,6 @@ height = 3.0
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_bhnr6"]
 height = 1.07034
 radius = 2.47257
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qqpkp"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_ckxl4"]
-material = SubResource("StandardMaterial3D_qqpkp")
-flip_faces = true
-size = Vector2(25, 25)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fuuk"]
 
@@ -95,17 +80,8 @@ render_target_update_mode = 4
 
 [node name="World" type="Node3D" parent="SubViewportContainer/SubViewport"]
 
-[node name="Infinite_World_Gen" type="Node3D" parent="SubViewportContainer/SubViewport/World" node_paths=PackedStringArray("viewer")]
-script = ExtResource("2_eu0o7")
-terrain_height = 3
-view_distance = 200
-viewer = NodePath("../Entities/Player_Entity")
-chunk_mesh_scene = ExtResource("3_t7vie")
-noise = SubResource("FastNoiseLite_3xg46")
-
 [node name="GridMap" type="GridMap" parent="SubViewportContainer/SubViewport/World" node_paths=PackedStringArray("player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-visible = false
 mesh_library = ExtResource("1_dpn5m")
 script = ExtResource("2_okjv2")
 player = NodePath("../Entities/Player_Entity")
@@ -114,9 +90,6 @@ metadata/_editor_floor_ = Vector3(0, 0, 0)
 [node name="Entities" type="Node3D" parent="SubViewportContainer/SubViewport/World"]
 
 [node name="Player_Entity" type="CharacterBody3D" parent="SubViewportContainer/SubViewport/World/Entities" node_paths=PackedStringArray("player_model", "inventory_list", "camera", "camera_pivot", "subviewport_container")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0508306, 0)
-floor_constant_speed = true
-floor_max_angle = 1.0472
 script = ExtResource("2_y0aoh")
 player_model = NodePath("player_model")
 inventory_list = NodePath("../../../../../CanvasLayer/InventoryUI/InventoryList")
@@ -196,10 +169,9 @@ transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/camera_pivot"]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707106, 0, 75, 75)
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 75, 75)
 projection = 1
 size = 100.0
-far = 200.0
 
 [node name="PickupArea" type="Area3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity"]
 collision_layer = 0
@@ -209,10 +181,6 @@ script = ExtResource("6_bmr5q")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity/PickupArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.410817, 0)
 shape = SubResource("CylinderShape3D_bhnr6")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World/Entities/Player_Entity"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.866739, 0)
-mesh = SubResource("PlaneMesh_ckxl4")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

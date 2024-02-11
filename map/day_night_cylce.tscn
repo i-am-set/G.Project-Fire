@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://dtjkwkmobbvwg"]
+
+[ext_resource type="Script" path="res://map/day_night_cylce_logic.gd" id="1_q5ssk"]
+
+[sub_resource type="Gradient" id="Gradient_wkd3q"]
+offsets = PackedFloat32Array(0, 0.564444)
+colors = PackedColorArray(0.0823529, 0.0823529, 0.388235, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_7788b"]
+gradient = SubResource("Gradient_wkd3q")
+fill_from = Vector2(1, 0.581197)
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_n17ks"]
+night_sky = SubResource("GradientTexture2D_7788b")
+
+[sub_resource type="Sky" id="Sky_f1nmp"]
+sky_material = SubResource("PhysicalSkyMaterial_n17ks")
+
+[sub_resource type="Environment" id="Environment_1xgf7"]
+background_mode = 2
+sky = SubResource("Sky_f1nmp")
+
+[node name="DayNightCylce" type="Node3D" node_paths=PackedStringArray("sun_light")]
+script = ExtResource("1_q5ssk")
+sun_light = NodePath("Sunlight")
+day_cycle_speed = 0.001
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1xgf7")
+
+[node name="Sunlight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.923879, 0.382683, 0, -0.382683, 0.923879, 0, 0, 0)
+light_angular_distance = 0.25
+shadow_enabled = true
+shadow_bias = 0.0
+shadow_normal_bias = 3.0
+directional_shadow_mode = 1
+directional_shadow_pancake_size = 387.6
+sky_mode = 1

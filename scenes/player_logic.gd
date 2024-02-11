@@ -54,7 +54,7 @@ func _input(_event):
 			camera.size = 100
 		_zoom_pixelate()
 
-func _process(delta):
+func _physics_process(delta):
 	playerInput = get_input()
 	if playerInput != Vector2.ZERO:
 		moveDir = Vector2(playerInput.x, playerInput.y)
@@ -69,18 +69,17 @@ func _rotate():
 		camera_pivot.rotation_degrees.y += ROTATESPEED
 
 func _move(_delta: float, playerInput: Vector2):
-	velocity = lerp(velocity,  Vector3(playerInput.x * SPEED, 0, playerInput.y * SPEED), _delta * ACCEL)
-	
-	var new_position = global_position - velocity
-	
-	if new_position != global_position:
-		player_model.look_at(global_position - velocity, Vector3.UP)
-	#_set_sprite(_delta)
+	velocity = lerp(velocity,  Vector3(playerInput.x * SPEED, -10, playerInput.y * SPEED), _delta * ACCEL)
 	
 	if(_check_if_busy() == true):
 		return
 	
 	move_and_slide()
+	
+	# Update rotation only when moving
+	if playerInput != Vector2.ZERO:
+		var new_position = global_position - velocity
+		player_model.look_at(new_position, Vector3.UP)
 
 func _zoom_pixelate():
 	if camera.size > 80:
@@ -91,25 +90,6 @@ func _zoom_pixelate():
 		subviewport_container.stretch_shrink = 2
 	else:
 		subviewport_container.stretch_shrink = 3
-
-#func _set_sprite(_delta: float):
-	#rawVelocity = lerp(rawVelocity,  Vector3(rawPlayerInput.x * SPEED, 0, rawPlayerInput.y * SPEED), _delta * ACCEL)
-	#
-	#if rawVelocity.x + rawVelocity.y > 0:
-		#if rawVelocity.x > rawVelocity.y:
-			#sprite.frame = 0
-		#elif rawVelocity.y > rawVelocity.x:
-			#sprite.frame = 1
-	#elif rawVelocity.x + rawVelocity.y < 0:
-		#if rawVelocity.x < rawVelocity.y:
-			#sprite.frame = 0
-		#elif rawVelocity.y < rawVelocity.x:
-			#sprite.frame = 2
-	#
-	#if rawVelocity.x > 0:
-		#sprite.flip_h = true
-	#elif rawVelocity.x < 0:
-		#sprite.flip_h = false
 
 func _check_if_busy() -> bool:
 	if inventory_list.is_open:

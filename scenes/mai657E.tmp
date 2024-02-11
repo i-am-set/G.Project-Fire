@@ -23,7 +23,6 @@
 noise_type = 3
 seed = 12321
 frequency = 0.008
-domain_warp_enabled = true
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_y2l8n"]
 radius = 1.0
@@ -97,7 +96,7 @@ render_target_update_mode = 4
 
 [node name="Infinite_World_Gen" type="Node3D" parent="SubViewportContainer/SubViewport/World" node_paths=PackedStringArray("viewer")]
 script = ExtResource("2_eu0o7")
-terrain_height = 3
+terrain_height = 5
 view_distance = 200
 viewer = NodePath("../Entities/Player_Entity")
 chunk_mesh_scene = ExtResource("3_t7vie")
@@ -114,9 +113,6 @@ metadata/_editor_floor_ = Vector3(0, 0, 0)
 [node name="Entities" type="Node3D" parent="SubViewportContainer/SubViewport/World"]
 
 [node name="Player_Entity" type="CharacterBody3D" parent="SubViewportContainer/SubViewport/World/Entities" node_paths=PackedStringArray("player_model", "inventory_list", "camera", "camera_pivot", "subviewport_container")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0508306, 0)
-floor_constant_speed = true
-floor_max_angle = 1.0472
 script = ExtResource("2_y0aoh")
 player_model = NodePath("player_model")
 inventory_list = NodePath("../../../../../CanvasLayer/InventoryUI/InventoryList")

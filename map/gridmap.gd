@@ -7,11 +7,12 @@ var temperature = FastNoiseLite.new()
 var altitude = FastNoiseLite.new()
 
 # Dimensions of each generated chunk
-var width = 64
-var length = 64
+var width = 128
+var length = 128
 
 # Reference to the player character
 @export var player: Node
+var last_player_cell_pos : Vector3i
 
 # List to keep track of loaded chunks
 var loaded_chunks = []
@@ -24,26 +25,37 @@ func _ready():
 
 	# Adjust this value to change the 'smoothness' of the map; lower values mean more smooth noise
 	altitude.frequency = 0.01
+	
+	# generate the first chunk
+	var player_cell_pos = local_to_map(player.position)
+	generate_chunk(player_cell_pos)
+	last_player_cell_pos = player_cell_pos
 
 func _process(delta):
 	# Convert the player's position to cell coordinates
 	var player_cell_pos = local_to_map(player.position)
 	
-	# Generate the chunk at the player's position
-	generate_chunk(player_cell_pos)
-	# Unload chunks that are too far away.
-	# Note: Not needed for smaller projects, but if you are loading a bigger gridmap, it's good practice
-	unload_distant_chunks(player_cell_pos)
-	print(loaded_chunks.size())
+	if last_player_cell_pos == null:
+		return
+	
+	if player_cell_pos != last_player_cell_pos:
+		# Generate the chunk at the player's position
+		generate_chunk(player_cell_pos)
+		# Unload chunks that are too far away.
+		unload_distant_chunks(player_cell_pos)
 
 
 func generate_chunk(pos):
+	var posx_calc = pos.x - (width/2)
+	var posz_calc = pos.z - (length/2)
 	for x in range(width):
 		for z in range(length):
+			var posx_calc_step2 = posx_calc + x
+			var posz_calc_step2 = posz_calc + z
 			# Generate noise values for moisture, temperature, and altitude
-			var moist = moisture.get_noise_2d(pos.x - (width/2) + x, pos.z - (length/2) + z) * 10  # Values between -10 and 10
-			var temp = temperature.get_noise_2d(pos.x - (width/2) + x, pos.z - (length/2) + z) * 10
-			var alt = altitude.get_noise_2d(pos.x - (width/2) + x, pos.z - (length/2) + z) * 10
+			var moist = moisture.get_noise_2d(posx_calc_step2, posz_calc_step2) * 10  # Values between -10 and 10
+			var temp = temperature.get_noise_2d(posx_calc_step2, posz_calc_step2) * 10
+			var alt = altitude.get_noise_2d(posx_calc_step2, posz_calc_step2) * 10
 
 			# Set the cell based on altitude; adjust for different tile types
 			# Need to evenly distribute -10 -> 10 to 0 -> 4....  This can be done by first adding 10
@@ -51,12 +63,14 @@ func generate_chunk(pos):
 			# vvv
 			
 			if alt < 0:  # Arbitrary sea level value (choosing 0 will mean roughly 1/2 the world is ocean)
-				set_cell_item(Vector3i(pos.x - (width/2) + x, 0, pos.z - (length/2) + z), 0)
+				set_cell_item(Vector3i(posx_calc_step2, 0, posz_calc_step2), 0)
 			else:  # You can add other logic like making beaches by setting item to whatever beach atlas item is when the alt is between 0 and 0.5 or something
-				set_cell_item(Vector3i(pos.x - (width/2) + x, 0, pos.z - (length/2) + z), 1)
+				set_cell_item(Vector3i(posx_calc_step2, 0, posz_calc_step2), 1)
 
 			if Vector3i(pos.x, 0, pos.z) not in loaded_chunks:
 				loaded_chunks.append(Vector3i(pos.x, 0, pos.z))
+				
+			#await get_tree().process_frame
 
 # Function to unload chunks that are too far away
 func unload_distant_chunks(player_pos):
